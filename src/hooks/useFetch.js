@@ -11,7 +11,13 @@ export const useFetch = (url, requestConfig) => {
 
   const fetchData = async () => {
     setError((prev) => {
-      return { ...prev, isFetching: true, isFailed: false, errorMessage: null };
+      return {
+        ...prev,
+        isFetching: true,
+        isFetched: false,
+        isFailed: false,
+        errorMessage: null,
+      };
     });
     try {
       const response = await fetch(url, {
@@ -30,6 +36,14 @@ export const useFetch = (url, requestConfig) => {
           return [...prev, data];
         });
       }
+      setError((prev) => {
+        return {
+          ...prev,
+          isFailed: false,
+          isFetched: true,
+          isFetching: false,
+        };
+      });
     } catch (error) {
       setError((prev) => {
         return {

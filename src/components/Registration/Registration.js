@@ -10,7 +10,7 @@ import classes from "./Registration.module.css";
 const Regisration = () => {
   const { person, setPerson } = useContext(RegistrationContext);
 
-  const { fetchData: registerUser } = useFetch(
+  const { fetchData: registerUser, error } = useFetch(
     "https://react-7f42f-default-rtdb.firebaseio.com/users.json",
     {
       method: "POST",
@@ -26,9 +26,7 @@ const Regisration = () => {
 
   useEffect(() => {
     console.log(person);
-  });
-
-  const [showError, setShowError] = useState(false);
+  }, [person]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -36,7 +34,7 @@ const Regisration = () => {
     for (const name in person) {
       const item = person[name];
       const { value } = item;
-      const { hasError, error } = checkIsValid(name, value);
+      const { hasError } = checkIsValid(name, value);
 
       if (hasError) {
         setPerson((prev) => {
@@ -52,12 +50,15 @@ const Regisration = () => {
 
     if (!person.isFormValid) {
       console.log("Failed to register");
-      setShowError(true);
       return;
     }
-    setShowError(false);
     registerUser();
     console.log("Registered succesfully");
+    person.firstName.value = "";
+    person.lastName.value = "";
+    person.email.value = "";
+    person.password.value = "";
+    person.confirmPassword.value = "";
   };
 
   const handleChange = (e) => {
@@ -172,7 +173,14 @@ const Regisration = () => {
             </p>
           )}
 
-        <Button type="submit">Register</Button>
+        <Button type="submit">
+          {error.isFetching ? "Loading..." : "Register"}
+        </Button>
+        {!error.isFailed && error.isFetched ? (
+          <p style={{ color: "green" }}>You have succsesfully registered!</p>
+        ) : (
+          <p style={{ color: "red" }}>{error.errorMessage}</p>
+        )}
       </form>
     </div>
   );
