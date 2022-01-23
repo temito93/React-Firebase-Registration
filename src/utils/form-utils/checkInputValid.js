@@ -29,9 +29,6 @@ export const checkIsValid = (name, value, password, dbEmail) => {
       ) {
         hasError = true;
         error = "Invalid email";
-      } else if (dbEmail === value.trim()) {
-        hasError = true;
-        error = "Email already Exists";
       } else {
         hasError = false;
         error = "";

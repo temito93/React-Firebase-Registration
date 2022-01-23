@@ -8,12 +8,6 @@ import Input from "../UI/Input";
 import classes from "./Registration.module.css";
 
 const Regisration = () => {
-  const { fetchData: getUsers, users } = useFetch(
-    "https://react-7f42f-default-rtdb.firebaseio.com/users.json",
-    {
-      method: "GET",
-    }
-  );
   const { person, setPerson } = useContext(RegistrationContext);
 
   const { fetchData: registerUser } = useFetch(
@@ -31,11 +25,6 @@ const Regisration = () => {
   );
 
   useEffect(() => {
-    getUsers();
-    console.log("effect");
-  }, []);
-
-  useEffect(() => {
     console.log(person);
   });
 
@@ -43,34 +32,11 @@ const Regisration = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    let email = "";
-
-    users.forEach((element) => {
-      for (const key in element) {
-        if (person.email.value === element[key].email) {
-          email = element[key].email;
-          break;
-        }
-      }
-    });
 
     for (const name in person) {
       const item = person[name];
       const { value } = item;
-      const { hasError, error } = checkIsValid(
-        name,
-        value,
-        person.password.value,
-        email
-      );
-      if (name === "email" && value === email) {
-        setPerson((prev) => {
-          return {
-            ...prev,
-            email: { ...person.email, hasError: hasError, errorMessage: error },
-          };
-        });
-      }
+      const { hasError, error } = checkIsValid(name, value);
 
       if (hasError) {
         setPerson((prev) => {
@@ -90,6 +56,7 @@ const Regisration = () => {
       return;
     }
     setShowError(false);
+    registerUser();
     console.log("Registered succesfully");
   };
 
