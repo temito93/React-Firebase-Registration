@@ -177,7 +177,7 @@ const Regisration = () => {
           {error.isFetching ? "Loading..." : "Register"}
         </Button>
         {!error.isFailed && error.isFetched ? (
-          <p style={{ color: "green" }}>You have succsesfully registered!</p>
+          <p style={{ color: "green" }}>You have successfully registered!</p>
         ) : (
           <p style={{ color: "red" }}>{error.errorMessage}</p>
         )}
